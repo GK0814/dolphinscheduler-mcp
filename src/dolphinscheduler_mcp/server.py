@@ -19,15 +19,15 @@ from .config import Config
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    handlers=[logging.StreamHandler(sys.stdout)],
+    handlers=[logging.StreamHandler(sys.stderr)],
 )
 
 logger = logging.getLogger(__name__)
 
 # Initialize MCP server
 mcp = FastMCP(
-    title="DolphinScheduler MCP",
-    description="MCP interface for DolphinScheduler API",
+    name="DolphinScheduler MCP",
+    instructions="MCP interface for DolphinScheduler API",
 )
 
 def register_tools() -> None:
@@ -76,4 +76,4 @@ def run_server(host: str = "0.0.0.0", port: int = 8089) -> None:
         logger.info("Server stopped by user")
     except Exception as e:
         logger.error(f"Error running server: {e}", exc_info=True)
-        sys.exit(1) 
+        sys.exit(1)

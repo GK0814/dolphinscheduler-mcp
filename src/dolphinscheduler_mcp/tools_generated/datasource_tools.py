@@ -549,25 +549,17 @@ class GetDatasourcesAuthedDatasource(FastMCPTool):
 
 
 def register_datasource_tools(mcp):
-    """Register datasource tools with FastMCP.
+    """Register default datasource tools with FastMCP.
     
     Args:
         mcp: The FastMCP instance to register tools with.
     """
     from ..fastmcp_compat import register_tool_class
     
-    register_tool_class(mcp, CreateDatasources)
-    register_tool_class(mcp, CreateDatasourcesConnect)
-    register_tool_class(mcp, DeleteDatasources)
     register_tool_class(mcp, GetDatasources)
-    register_tool_class(mcp, GetDatasources2)
-    register_tool_class(mcp, GetDatasourcesAuthedDatasource)
     register_tool_class(mcp, GetDatasourcesConnectTest)
-    register_tool_class(mcp, GetDatasourcesKerberosStartupState)
-    register_tool_class(mcp, GetDatasourcesUnauthDatasource)
     register_tool_class(mcp, GetDatasourcesVerifyName)
     register_tool_class(mcp, ListDatasourcesDatabases)
     register_tool_class(mcp, ListDatasourcesList)
     register_tool_class(mcp, ListDatasourcesTablecolumns)
     register_tool_class(mcp, ListDatasourcesTables)
-    register_tool_class(mcp, UpdateDatasources)

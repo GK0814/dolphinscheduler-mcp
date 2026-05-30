@@ -54,12 +54,18 @@ def main() -> int:
     
     # Check if API URL and key are set
     if "DOLPHINSCHEDULER_API_URL" not in os.environ:
-        print("Warning: DOLPHINSCHEDULER_API_URL environment variable is not set.")
-        print("Using default: http://localhost:12345/dolphinscheduler")
+        print(
+            "Warning: DOLPHINSCHEDULER_API_URL environment variable is not set.",
+            file=sys.stderr,
+        )
+        print("Using default: http://localhost:12345/dolphinscheduler", file=sys.stderr)
     
     if "DOLPHINSCHEDULER_API_KEY" not in os.environ:
-        print("Warning: DOLPHINSCHEDULER_API_KEY environment variable is not set.")
-        print("Authentication to the DolphinScheduler API may fail.")
+        print(
+            "Warning: DOLPHINSCHEDULER_API_KEY environment variable is not set.",
+            file=sys.stderr,
+        )
+        print("Authentication to the DolphinScheduler API may fail.", file=sys.stderr)
     
     # Set logging level
     os.environ["DOLPHINSCHEDULER_MCP_LOG_LEVEL"] = args.log_level
@@ -69,12 +75,12 @@ def main() -> int:
         run_server(host=args.host, port=args.port)
         return 0
     except KeyboardInterrupt:
-        print("\nServer stopped by user")
+        print("\nServer stopped by user", file=sys.stderr)
         return 0
     except Exception as e:
-        print(f"Error running server: {e}")
+        print(f"Error running server: {e}", file=sys.stderr)
         return 1
 
 
 if __name__ == "__main__":
-    sys.exit(main()) 
+    sys.exit(main())

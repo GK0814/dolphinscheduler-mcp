@@ -211,15 +211,13 @@ class DeleteWorkerGroups(FastMCPTool):
 
 
 def register_worker_group_tools(mcp):
-    """Register worker group tool with FastMCP.
+    """Register default worker group query tools with FastMCP.
     
     Args:
         mcp: The FastMCP instance to register tools with.
     """
     from ..fastmcp_compat import register_tool_class
     
-    register_tool_class(mcp, CreateWorkerGroups)
-    register_tool_class(mcp, DeleteWorkerGroups)
     register_tool_class(mcp, GetWorkerGroups)
     register_tool_class(mcp, GetWorkerGroupsAll)
     register_tool_class(mcp, GetWorkerGroupsWorkerAddressList)

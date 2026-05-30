@@ -467,7 +467,7 @@ class GetProjectsAuthedProject(FastMCPTool):
 
 
 def register_project_tools(mcp):
-    """Register project tools with FastMCP.
+    """Register default project tools with FastMCP.
     
     Args:
         mcp: The FastMCP instance to register tools with.
@@ -475,15 +475,7 @@ def register_project_tools(mcp):
     from ..fastmcp_compat import register_tool_class
     
     register_tool_class(mcp, CreateProjects)
-    register_tool_class(mcp, DeleteProjects)
     register_tool_class(mcp, GetProjects)
-    register_tool_class(mcp, GetProjects36)
-    register_tool_class(mcp, GetProjectsAuthedProject)
-    register_tool_class(mcp, GetProjectsAuthedUser)
     register_tool_class(mcp, GetProjectsCreatedAndAuthed)
-    register_tool_class(mcp, GetProjectsListDependent)
-    register_tool_class(mcp, GetProjectsProjectWithAuthorizedLevel)
-    register_tool_class(mcp, GetProjectsProjectWithAuthorizedLevelListPaging)
-    register_tool_class(mcp, GetProjectsUnauthProject)
     register_tool_class(mcp, ListProjectsList)
     register_tool_class(mcp, UpdateProjects)

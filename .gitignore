@@ -36,6 +36,7 @@ venv.bak/
 *.swp
 *.swo
 .trae/
+logs/
 
 # OS
 .DS_Store

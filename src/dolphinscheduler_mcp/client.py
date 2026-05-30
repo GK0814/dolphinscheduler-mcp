@@ -72,7 +72,7 @@ class DolphinSchedulerClient:
         # Build headers
         headers = {}
         if self.config.has_api_key():
-            headers["Token"] = self.config.api_key
+            headers["token"] = self.config.api_key
         
         # Make the request
         async with session.request(method, url, params=params, json=json_data, headers=headers) as response:
@@ -112,7 +112,7 @@ class DolphinSchedulerClient:
         
         # Add token if available
         if self.config.has_api_key():
-            headers["Token"] = self.config.api_key
+            headers["token"] = self.config.api_key
         
         try:
             # Create form data
@@ -186,7 +186,7 @@ class DolphinSchedulerClient:
         
         # Add token if available
         if self.config.has_api_key():
-            headers["Token"] = self.config.api_key
+            headers["token"] = self.config.api_key
         
         try:
             self.logger.debug(f"Sending {method} request to {url} for raw response")
@@ -281,4 +281,4 @@ class DolphinSchedulerClient:
         Returns:
             Response from the API
         """
-        return await self.request("DELETE", f"projects/{project_code}") 
+        return await self.request("DELETE", f"projects/{project_code}")

@@ -2,8 +2,11 @@
 
 import os
 import json
+import logging
 from pathlib import Path
 from typing import Optional, Dict, Any
+
+logger = logging.getLogger(__name__)
 
 def read_mcp_settings() -> Dict[str, Any]:
     """Read MCP settings from the Cursor MCP settings file.
@@ -20,7 +23,7 @@ def read_mcp_settings() -> Dict[str, Any]:
                 settings = json.load(f)
                 return settings
         except Exception as e:
-            print(f"Error reading MCP settings file: {e}")
+            logger.debug("Error reading MCP settings file: %s", e)
     
     return {}
 
@@ -33,15 +36,15 @@ def get_env_from_mcp_settings() -> Dict[str, str]:
     settings = read_mcp_settings()
     env_vars = {}
     
-    print("Reading MCP settings:", settings.keys() if settings else "No settings found")
+    logger.debug("Reading MCP settings: %s", settings.keys() if settings else "No settings found")
     
     # Look for the dolphinscheduler server config
     if 'mcpServers' in settings and 'dolphinscheduler' in settings['mcpServers']:
         server_config = settings['mcpServers']['dolphinscheduler']
-        print("Found dolphinscheduler server config:", server_config.keys())
+        logger.debug("Found dolphinscheduler server config: %s", server_config.keys())
         if 'env' in server_config:
             env_vars = server_config['env']
-            print("Found environment variables in MCP settings:", env_vars)
+            logger.debug("Found environment variables in MCP settings")
     
     return env_vars
 
@@ -70,7 +73,7 @@ class Config:
             # Get API key from MCP settings, env var, or use default
             cls._instance._api_key = mcp_env.get(
                 "DOLPHINSCHEDULER_API_KEY",
-                os.environ.get("DOLPHINSCHEDULER_API_KEY", "")
+                os.environ.get("DOLPHINSCHEDULER_API_KEY")
             )
             
             # Set the environment variables for other parts of the app
@@ -102,7 +105,7 @@ class Config:
         os.environ["DOLPHINSCHEDULER_API_URL"] = value
     
     @property
-    def api_key(self) -> str:
+    def api_key(self) -> Optional[str]:
         """Get the API key.
         
         Returns:
@@ -127,4 +130,4 @@ class Config:
         Returns:
             True if an API key is set, False otherwise.
         """
-        return bool(self._api_key) 
+        return bool(self._api_key)

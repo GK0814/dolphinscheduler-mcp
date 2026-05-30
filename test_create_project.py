@@ -1,6 +1,12 @@
 import asyncio
 import os
+import pytest
 from src.dolphinscheduler_mcp.client import DolphinSchedulerClient
+
+pytestmark = pytest.mark.skipif(
+    os.environ.get("DS_MCP_RUN_INTEGRATION_TESTS") != "1",
+    reason="Integration test creates a real DolphinScheduler project.",
+)
 
 async def test_create_project():
     # Create a client with environment variables
@@ -32,4 +38,4 @@ async def test_create_project():
         await client.close()
 
 if __name__ == "__main__":
-    asyncio.run(test_create_project()) 
+    asyncio.run(test_create_project())
