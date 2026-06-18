@@ -68,7 +68,9 @@ async def tool_fn({param_decl}):
     {self.description}
     \"\"\"
     # 调用原始 run 方法
-    result = await self._run({param_decl})
+    result = self._run({param_decl})
+    if inspect.isawaitable(result):
+        result = await result
     # 返回文本内容
     return TextContent(type="text", text=str(result))
 """
@@ -76,6 +78,7 @@ async def tool_fn({param_decl}):
         # 执行代码创建函数
         namespace = {
             'self': self,
+            'inspect': inspect,
             'TextContent': TextContent
         }
         exec(tool_func_code, namespace)

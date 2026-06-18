@@ -25,6 +25,19 @@ def main() -> int:
         help="Port to bind the server (default: 8089 or DOLPHINSCHEDULER_MCP_PORT env var)",
     )
     parser.add_argument(
+        "--transport",
+        type=str,
+        choices=["stdio", "sse", "streamable-http"],
+        default=os.environ.get("DOLPHINSCHEDULER_MCP_TRANSPORT", "stdio"),
+        help="MCP transport to use (default: stdio or DOLPHINSCHEDULER_MCP_TRANSPORT env var)",
+    )
+    parser.add_argument(
+        "--path",
+        type=str,
+        default=os.environ.get("DOLPHINSCHEDULER_MCP_PATH", "/mcp"),
+        help="HTTP path for streamable-http transport (default: /mcp)",
+    )
+    parser.add_argument(
         "--api-url",
         type=str,
         default=None,
@@ -72,7 +85,12 @@ def main() -> int:
 
     # Run the server
     try:
-        run_server(host=args.host, port=args.port)
+        run_server(
+            host=args.host,
+            port=args.port,
+            transport=args.transport,
+            path=args.path,
+        )
         return 0
     except KeyboardInterrupt:
         print("\nServer stopped by user", file=sys.stderr)

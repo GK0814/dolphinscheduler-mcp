@@ -9,6 +9,15 @@ from ..config import Config
 from ..fastmcp_compat import FastMCPTool
 
 
+def _mask_secret(value: Optional[str]) -> Optional[str]:
+    """Return a non-sensitive preview of a configured secret."""
+    if not value:
+        return None
+    if len(value) <= 8:
+        return "***"
+    return f"{value[:4]}...{value[-4:]}"
+
+
 class CheckEnvironmentSettings(FastMCPTool):
     """Tool for checking the current environment settings for DolphinScheduler API."""
 
@@ -41,7 +50,7 @@ class CheckEnvironmentSettings(FastMCPTool):
                 "success": True,
                 "api_url": config.api_url,
                 "has_api_key": config.has_api_key(),
-                "api_key_value": config.api_key if config.has_api_key() else None
+                "api_key_value": _mask_secret(config.api_key) if config.has_api_key() else None
             }
         except Exception as e:
             self.logger.error(f"Error checking environment settings: {e}")

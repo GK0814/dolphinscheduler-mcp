@@ -11,5 +11,5 @@ RUN pip install --no-cache-dir -e .
 # Expose MCP server port
 EXPOSE 8089
 
-# Run server
-CMD ["python", "-m", "src.dolphinscheduler_mcp"] 
+# Run server with Streamable HTTP transport
+CMD ["ds-mcp", "--transport", "streamable-http", "--host", "0.0.0.0", "--port", "8089", "--path", "/mcp"]

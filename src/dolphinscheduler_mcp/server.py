@@ -1,9 +1,8 @@
 """DolphinScheduler MCP Server implementation using FastMCP."""
 
 import logging
-import sys
 import os
-from typing import Dict, List, Optional
+import sys
 
 # Clear module cache for fastmcp_compat
 if "dolphinscheduler_mcp.fastmcp_compat" in sys.modules:
@@ -24,13 +23,19 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-# Initialize MCP server
-mcp = FastMCP(
-    name="DolphinScheduler MCP",
-    instructions="MCP interface for DolphinScheduler API",
-)
 
-def register_tools() -> None:
+def create_mcp_server(host: str, port: int, path: str) -> FastMCP:
+    """Create the FastMCP server with transport settings."""
+    return FastMCP(
+        name="DolphinScheduler MCP",
+        instructions="MCP interface for DolphinScheduler API",
+        host=host,
+        port=port,
+        streamable_http_path=path,
+    )
+
+
+def register_tools(mcp: FastMCP) -> None:
     """Register all tools with the MCP server."""
     # Check environment variables first
     api_url = os.environ.get("DOLPHINSCHEDULER_API_URL")
@@ -54,24 +59,36 @@ def register_tools() -> None:
     except Exception as e:
         logger.error(f"Error registering tools: {e}", exc_info=True)
 
-# Register all tools
-register_tools()
 
-def run_server(host: str = "0.0.0.0", port: int = 8089) -> None:
+def run_server(
+    host: str = "0.0.0.0",
+    port: int = 8089,
+    transport: str = "stdio",
+    path: str = "/mcp",
+) -> None:
     """Run the DolphinScheduler MCP server.
     
     Args:
         host: Host to bind the server to
         port: Port to bind the server to
+        transport: Transport protocol: stdio, sse, or streamable-http
+        path: HTTP path for streamable-http transport
     """
-    logger.info(f"Starting DolphinScheduler MCP Server on {host}:{port}")
+    mcp = create_mcp_server(host=host, port=port, path=path)
+    register_tools(mcp)
+
+    logger.info(
+        "Starting DolphinScheduler MCP Server with transport=%s host=%s port=%s path=%s",
+        transport,
+        host,
+        port,
+        path,
+    )
     logger.info(f"API URL: {Config().api_url}")
     logger.info(f"API Key is {'set' if Config().has_api_key() else 'not set'}")
     
     try:
-        # FastMCP.run() does not accept uvicorn_config parameter
-        # Simply call run() without parameters
-        mcp.run()
+        mcp.run(transport=transport)
     except KeyboardInterrupt:
         logger.info("Server stopped by user")
     except Exception as e:
