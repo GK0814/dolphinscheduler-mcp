@@ -82,6 +82,42 @@ class DolphinSchedulerClient:
             # Parse the response
             return await response.json()
 
+    async def request_form(
+        self,
+        method: str,
+        path: str,
+        data: Optional[Dict[str, Any]] = None,
+    ) -> Dict[str, Any]:
+        """Send form-encoded data to the DolphinScheduler API.
+
+        DolphinScheduler process-definition APIs declare large fields such as
+        taskDefinitionJson as request parameters. Sending them in the query
+        string can exceed URL length limits, so large workflow payloads should
+        be sent as application/x-www-form-urlencoded body fields instead.
+        """
+        session = await self._ensure_session()
+        url = f"{self.config.api_url.rstrip('/')}/{path.lstrip('/')}"
+
+        headers = {}
+        if self.config.has_api_key():
+            headers["token"] = self.config.api_key
+
+        form_data = {}
+        if data:
+            for key, value in data.items():
+                if isinstance(value, (dict, list)):
+                    form_data[key] = json.dumps(value, ensure_ascii=False)
+                elif value is None:
+                    form_data[key] = ""
+                else:
+                    form_data[key] = str(value)
+
+        async with session.request(
+            method, url, data=form_data, headers=headers
+        ) as response:
+            response.raise_for_status()
+            return await response.json()
+
     async def request_with_files(
         self,
         method: str,

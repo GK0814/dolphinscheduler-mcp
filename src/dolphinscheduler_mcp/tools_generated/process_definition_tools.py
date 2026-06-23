@@ -536,10 +536,10 @@ class CreateProcessDefinition(FastMCPTool):
                 "otherParamsJson": _json_param(otherParamsJson, {}),
                 "executionType": executionType or "PARALLEL",
             }
-            response = await client.request(
+            response = await client.request_form(
                 "POST",
                 f"/projects/{int(projectCode)}/process-definition",
-                params=params,
+                data=params,
             )
             return {"success": _api_success(response), "data": response, "params": params}
         finally:
@@ -614,13 +614,13 @@ class UpdateProcessDefinition(FastMCPTool):
                 "releaseState": releaseState or "OFFLINE",
                 "otherParamsJson": _json_param(otherParamsJson, {}),
             }
-            response = await client.request(
+            response = await client.request_form(
                 "PUT",
                 (
                     f"/projects/{int(projectCode)}/process-definition/"
                     f"{int(processDefinitionCode)}"
                 ),
-                params=params,
+                data=params,
             )
             return {"success": _api_success(response), "data": response, "params": params}
         finally:
@@ -804,10 +804,10 @@ class CreateDataxWorkflow(FastMCPTool):
                     "resolvedPreferences": preferences,
                 }
 
-            response = await client.request(
+            response = await client.request_form(
                 "POST",
                 f"/projects/{project_code}/process-definition",
-                params=params,
+                data=params,
             )
             return {
                 "success": _api_success(response),
